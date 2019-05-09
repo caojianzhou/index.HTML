@@ -1,0 +1,90 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <style>
+        #mydiv{  width: 700px;
+                 height:300px;
+                 overflow: hidden;
+                 position:relative;
+                 margin: 0 auto
+        }
+        #myimg img{ width: 700px; height:300px; overflow: hidden;}
+        #mydiv { position: absolute; left: 10px; top:130px;}
+        #mydiv { position: absolute; right: 10px; top:130px;}
+        ul{ position: absolute; right: 10px; bottom: -10px; width:200px; height: 50px;}
+        li{ width: 30px; height: 30px; float: left; background: pink; list-style: none; margin-left:2px; color: #fff; text-align: center;; line-height: 30px; font-weight: bolder;}
+        .light{ background: #000}
+    </style>
+</head>
+<body>
+<div id='mydiv'>
+    <div id='myimg'>
+        <img src="img/1.jpg">
+        <img src="img/2.jpg">
+        <img src="img/3.jpg">
+        <img src="img/4.jpg">
+        <img src="img/5.jpg">
+        <img src="img/6.jpg">
+    </div>
+    <ul id='myul'>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+    </ul>
+</div>
+</body>
+<script>
+    function Lb(){
+        this.lis=document.getElementsByTagName("li");
+        this.img=document.getElementsByTagName("img");
+        this.timer=null;
+        this.num=0;
+    }
+    //自动轮播
+    Lb.prototype.auto=function(){
+        var that=this;
+        this.timer=setInterval(function(){
+            that.num++;
+            if(that.num>=that.lis.length)that.num=0;
+            that.autoplay(that.num);
+        },1000);
+    };
+    // 公共部分
+    Lb.prototype.autoplay=function(n){
+        for(var i=0;i<this.img.length;i++){
+            this.lis[i].className="";
+            this.img[i].style.display="none";
+        }
+        this.lis[n].className="light";
+        this.img[n].style.display="block";
+    };
+
+    //鼠标事件
+        Lb.prototype.mouse=function(){
+            var that=this;
+            this.auto();
+            for(var j=0;j<this.lis.length;j++){
+                this.lis[j].index=j;
+                this.lis[j].onmouseover=function() {
+                    clearInterval(that.timer);
+                    that.autoplay(this.index);
+                    that.num = this.index;
+                };
+            this.lis[j].onmouseout=function(){
+                that.auto();
+            };
+        }
+    };
+
+    var lb=new Lb();
+    lb.mouse();
+
+
+</script>
+</html>
